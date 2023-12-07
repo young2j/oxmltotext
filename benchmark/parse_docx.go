@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/young2j/gooxmltotext/oxmltotext/docxtotext"
+	"github.com/young2j/oxmltotext/docxtotext"
 
 	"baliance.com/gooxml/document"
 	"code.sajari.com/docconv/v2"
