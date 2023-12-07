@@ -7,15 +7,9 @@ package main
 
 import "testing"
 
-func Benchmark_ParseXls1(b *testing.B) {
+func Benchmark_ParseXlsToText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		parseXls1()
-	}
-}
-
-func Benchmark_ParseXls2(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		parseXls2()
+		parseXlsToText()
 	}
 }
 

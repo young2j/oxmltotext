@@ -25,7 +25,7 @@ func Benchmark_ParseXlsxByExcelize(b *testing.B) {
 	}
 }
 
-func Benchmark_ParseXlsxByOxml(b *testing.B) {
+func Benchmark_ParseXlsxByOxmlToText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		parseXlsxByOxmlToText()
 	}

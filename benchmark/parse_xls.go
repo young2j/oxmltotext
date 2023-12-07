@@ -32,7 +32,7 @@ func parseXls1() string {
 	return res
 }
 
-func parseXls2() string {
+func parseXlsToText() string {
 	output, err := exec.Command("xlstotext", xlsPath).Output()
 	if err != nil {
 		panic(err)

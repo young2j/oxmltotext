@@ -22,4 +22,4 @@ bench_ppt:
 bench_pdf:
 	go test -benchmem -bench ^Benchmark_ParsePdf -benchtime=1s 
 
-
+bench_all: bench_docx bench_xlsx bench_pptx bench_pdf bench_doc bench_xls bench_ppt
