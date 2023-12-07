@@ -8,6 +8,7 @@ package xlsxtotext
 import (
 	"archive/zip"
 	"bytes"
+	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -114,7 +115,7 @@ func matchZipFile(xp *XlsxParser, r *zip.Reader) error {
 	xp.diagramsFiles = make(map[string]*zip.File, 4)
 	xp.drawingsFile = make(map[string]*zip.File, 4)
 	xp.sheetRelsMap = make(map[int]map[string]string, sheetsNum)
-	xp.drawingRelsMap = make(map[int]map[string]string, sheetsNum)
+	xp.drawingRelsMap = make(map[string]map[string]string, sheetsNum)
 
 	for _, file := range r.File {
 		switch {
@@ -167,7 +168,8 @@ func matchZipFile(xp *XlsxParser, r *zip.Reader) error {
 				if err != nil {
 					return err
 				}
-				xp.drawingRelsMap[i] = relsMap
+				k := fmt.Sprintf("xl/drawings/drawing%d.xml", i)
+				xp.drawingRelsMap[k] = relsMap
 				continue
 			}
 		}

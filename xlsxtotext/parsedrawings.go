@@ -38,12 +38,12 @@ func (xp *XlsxParser) extractDrawings(i int, rId string) *strings.Builder {
 		return nil
 	}
 
-	drawingFname, ok := sheetRels[rId]
+	drawingName, ok := sheetRels[rId]
 	if !ok {
 		return nil
 	}
 
-	f, ok := xp.drawingsFile[drawingFname]
+	f, ok := xp.drawingsFile[drawingName]
 	if !ok {
 		return nil
 	}
@@ -67,7 +67,7 @@ func (xp *XlsxParser) extractDrawings(i int, rId string) *strings.Builder {
 				attrs := e.Attrs()
 				if attrs.Len() > 0 {
 					rIdKV := attrs.Get("r:id")
-					charts, err := xp.extractChart(i, rIdKV.Value())
+					charts, err := xp.extractChart(drawingName, rIdKV.Value())
 					xp.logWarn(err)
 					if charts != nil {
 						texts.WriteString(charts.String())
@@ -78,7 +78,7 @@ func (xp *XlsxParser) extractDrawings(i int, rId string) *strings.Builder {
 				attrs := e.Attrs()
 				if attrs.Len() > 0 {
 					rIdKV := attrs.Get("r:dm")
-					diagrams, err := xp.extractDiagram(i, rIdKV.Value())
+					diagrams, err := xp.extractDiagram(drawingName, rIdKV.Value())
 					xp.logWarn(err)
 					if diagrams != nil {
 						texts.WriteString(diagrams.String())
@@ -89,7 +89,7 @@ func (xp *XlsxParser) extractDrawings(i int, rId string) *strings.Builder {
 				attrs := e.Attrs()
 				if attrs.Len() > 0 {
 					rIdKV := attrs.Get("r:embed")
-					images, err := xp.extractImage(i, rIdKV.Value())
+					images, err := xp.extractImage(drawingName, rIdKV.Value())
 					xp.logWarn(err)
 					if images != nil {
 						texts.WriteString(images.String())
@@ -103,17 +103,17 @@ func (xp *XlsxParser) extractDrawings(i int, rId string) *strings.Builder {
 	return texts
 }
 
-// extractChart extracts the chart text from the xlsx file for a given sheet index and relationship ID.
+// extractChart extracts the chart text from the xlsx file for a given drawing part and relationship ID.
 //
 // Parameters:
-//   - i: the index of the sheet
+//   - drawingName: the name of drawing part
 //   - rId: the relationship ID of the chart
 //
 // Returns:
 //   - *strings.Builder: the extracted chart text as a strings.Builder
 //   - error: any error that occurred during the extraction
-func (xp *XlsxParser) extractChart(i int, rId string) (*strings.Builder, error) {
-	drawingRels, ok := xp.drawingRelsMap[i]
+func (xp *XlsxParser) extractChart(drawingName string, rId string) (*strings.Builder, error) {
+	drawingRels, ok := xp.drawingRelsMap[drawingName]
 	if !ok {
 		return nil, types.ErrNonePart
 	}
@@ -265,17 +265,17 @@ NEXT:
 	return fmtTexts, nil
 }
 
-// extractChart extracts the diagram text from the xlsx file for a given sheet index and relationship ID.
+// extractChart extracts the diagram text from the xlsx file for a given drawing part and relationship ID.
 //
 // Parameters:
-//   - i: the index of the sheet
+//   - drawingName: the name of drawing part
 //   - rId: the relationship ID of the diagram
 //
 // Returns:
 //   - *strings.Builder: the extracted diagram text as a strings.Builder
 //   - error: any error that occurred during the extraction
-func (xp *XlsxParser) extractDiagram(i int, rId string) (*strings.Builder, error) {
-	drawingRels, ok := xp.drawingRelsMap[i]
+func (xp *XlsxParser) extractDiagram(drawingName string, rId string) (*strings.Builder, error) {
+	drawingRels, ok := xp.drawingRelsMap[drawingName]
 	if !ok {
 		return nil, types.ErrNonePart
 	}
@@ -371,14 +371,14 @@ NEXT:
 // extractImage extracts text content from image by the ocr interface.
 //
 // Parameters:
-//   - i: the index of the sheet
+//   - drawingName: the name of drawing part
 //   - rId: the reference id of the image.
 //
 // Returns:
 //   - *strings.Builder: the formatted text of the extracted content.
 //   - error: any error that occurred during the extraction process.
-func (xp *XlsxParser) extractImage(i int, rId string) (*strings.Builder, error) {
-	drawingRels, ok := xp.drawingRelsMap[i]
+func (xp *XlsxParser) extractImage(drawingName string, rId string) (*strings.Builder, error) {
+	drawingRels, ok := xp.drawingRelsMap[drawingName]
 	if !ok {
 		return nil, types.ErrNonePart
 	}

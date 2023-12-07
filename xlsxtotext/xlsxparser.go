@@ -25,7 +25,7 @@ type XlsxParser struct {
 	diagramsFiles     map[string]*zip.File
 	drawingsFile      map[string]*zip.File
 	sheetRelsMap      map[int]map[string]string
-	drawingRelsMap    map[int]map[string]string
+	drawingRelsMap    map[string]map[string]string
 
 	parseCharts   bool
 	parseImages   bool
