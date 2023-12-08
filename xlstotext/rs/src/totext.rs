@@ -113,7 +113,9 @@ impl XlsToText {
             for (i, (c, cell)) in row.iter().zip(contents.iter_mut()).enumerate() {
                 cell.clear();
                 match formatter(i as u32 + offset_i, j as u32 + offset_j, c.clone()) {
-                    DataType::Error(e) => return Err(Errors::CellError(e)),
+                    // DataType::Error(e) => return Err(Errors::CellError(e)),
+                    // dont't interrupt other cells parsing
+                    DataType::Error(e) => eprintln!("Error: {e}"),
                     // don't bother updating cell for empty
                     DataType::Empty => (),
                     // don't go through fmt for strings
