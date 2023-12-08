@@ -6,6 +6,7 @@
 package xlsxtotext
 
 import (
+	"image"
 	"strconv"
 	"strings"
 
@@ -92,6 +93,38 @@ func (xp *XlsxParser) Close() (err error) {
 	}
 
 	return nil
+}
+
+// ExtractImages extracts images from the xlsx file.
+//
+// Parameters:
+//   - None
+//
+// Returns:
+//   - []types.Image: a slice of images extracted from the xlsx file.
+//   - error: an error if any occurred during the extraction process.
+func (xp *XlsxParser) ExtractImages() ([]types.Image, error) {
+	images := make([]types.Image, 0, len(xp.imagesFiles))
+	for name, f := range xp.imagesFiles {
+		r, err := f.Open()
+		if err != nil {
+			return images, err
+		}
+		img, format, err := image.Decode(r)
+		if err != nil {
+			r.Close()
+			return images, err
+		}
+		r.Close()
+
+		images = append(images, types.Image{
+			Raw:    img,
+			Name:   name,
+			Format: format,
+		})
+	}
+
+	return images, nil
 }
 
 // ExtractSheetTexts extracts the texts from the specified xlsx sheets(start 1).

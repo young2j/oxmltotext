@@ -6,6 +6,8 @@
 package pptxtotext
 
 import (
+	"bytes"
+	"image/jpeg"
 	"os"
 	"testing"
 )
@@ -153,4 +155,36 @@ func TestParseImages(t *testing.T) {
 	}
 
 	t.Log(texts)
+}
+
+func TestExtractImages(t *testing.T) {
+	pp, err := Open(pptxPath)
+	if err != nil {
+		t.Error(err)
+	}
+	defer pp.Close()
+
+	imgs, err := pp.ExtractImages()
+	if err != nil {
+		t.Error(err)
+	}
+
+	for _, img := range imgs {
+		//-- save to file --
+		// fname := filepath.Base(img.Name)
+		// f, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY, 0644)
+		// if err != nil {
+		// 	t.Log(err)
+		// }
+		// defer f.Close()
+		// -- memory buffer --
+		f := new(bytes.Buffer)
+
+		err = jpeg.Encode(f, img.Raw, nil)
+		if err != nil {
+			t.Log(err)
+		}
+		t.Logf("img format: %v size:%v bytes", img.Format, len(f.Bytes()))
+	}
+
 }

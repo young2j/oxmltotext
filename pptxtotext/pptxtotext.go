@@ -6,6 +6,7 @@
 package pptxtotext
 
 import (
+	"image"
 	"strings"
 
 	"github.com/young2j/oxmltotext/ocr"
@@ -91,6 +92,38 @@ func (pp *PptxParser) Close() (err error) {
 	}
 
 	return nil
+}
+
+// ExtractImages extracts images from the pptx file.
+//
+// Parameters:
+//   - None
+//
+// Returns:
+//   - []types.Image: a slice of images extracted from the pptx file.
+//   - error: an error if any occurred during the extraction process.
+func (pp *PptxParser) ExtractImages() ([]types.Image, error) {
+	images := make([]types.Image, 0, len(pp.imagesFiles))
+	for name, f := range pp.imagesFiles {
+		r, err := f.Open()
+		if err != nil {
+			return images, err
+		}
+		img, format, err := image.Decode(r)
+		if err != nil {
+			r.Close()
+			return images, err
+		}
+		r.Close()
+
+		images = append(images, types.Image{
+			Raw:    img,
+			Name:   name,
+			Format: format,
+		})
+	}
+
+	return images, nil
 }
 
 // ExtractSlideTexts extracts the texts from the specified pptx slides(start 1).

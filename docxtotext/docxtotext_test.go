@@ -100,7 +100,7 @@ func TestExtractImages(t *testing.T) {
 		if err != nil {
 			t.Log(err)
 		}
-		t.Logf("img size:%v", len(f.Bytes()))
+		t.Logf("img format: %v size:%v bytes", img.Format, len(f.Bytes()))
 	}
 }
 
