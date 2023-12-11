@@ -217,6 +217,11 @@ func (xp *XlsxParser) ExtractTexts() (string, error) {
 //   - error: An error if there is any issue with opening the file or parsing
 //     the XML elements.
 func (xp *XlsxParser) parseSharedStrings() error {
+	if xp.sharedStringsFile == nil {
+		xp.logWarn(types.ErrNoSharedStrings)
+		return nil
+	}
+
 	rc, err := xp.sharedStringsFile.Open()
 	if err != nil {
 		return err

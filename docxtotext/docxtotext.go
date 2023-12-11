@@ -228,6 +228,7 @@ func (dp *DocxParser) ExtractTexts() (string, error) {
 //   - error: an error if any.
 func (dp *DocxParser) extractDocument() (*strings.Builder, error) {
 	if dp.documentFile == nil {
+		dp.logWarn(types.ErrNoDocument)
 		return new(strings.Builder), nil
 	}
 
@@ -342,6 +343,11 @@ NEXT:
 //   - *strings.Builder: a strings.Builder containing the extracted comments text.
 //   - error: an error if any.
 func (dp *DocxParser) extractComments() (*strings.Builder, error) {
+	if dp.commentsFile == nil {
+		dp.logWarn(types.ErrNoComments)
+		return new(strings.Builder), nil
+	}
+
 	rc, err := dp.commentsFile.Open()
 	if err != nil {
 		return nil, err
@@ -388,6 +394,11 @@ NEXT:
 //   - *strings.Builder: a strings.Builder containing the extracted endnotes text.
 //   - error: an error if any.
 func (dp *DocxParser) extractEndnotes() (*strings.Builder, error) {
+	if dp.endnotesFile == nil {
+		dp.logWarn(types.ErrNoEndnotes)
+		return new(strings.Builder), nil
+	}
+
 	rc, err := dp.endnotesFile.Open()
 	if err != nil {
 		return nil, err
@@ -441,6 +452,11 @@ NEXT:
 //   - *strings.Builder: a strings.Builder containing the extracted footnotes text.
 //   - error: an error if any.
 func (dp *DocxParser) extractFootnotes() (*strings.Builder, error) {
+	if dp.footnotesFile == nil {
+		dp.logWarn(types.ErrNoFootnotes)
+		return new(strings.Builder), nil
+	}
+
 	rc, err := dp.footnotesFile.Open()
 	if err != nil {
 		return nil, err
